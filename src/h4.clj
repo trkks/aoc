@@ -5,10 +5,9 @@
 (require '[clojure.set :as set])
 (require '[clojure.math :as math])
 
-
-(defn card-wins [x]
+(defn card-wins [s]
   (let [
-    parts   (rest (str/split x #"\||:" 3))
+    parts   (rest (str/split s #"\||:" 3))
     nums    #(set (map parse-long (str/split (str/trim %) #" +")))
     winners (nums (first parts))
     yours   (nums (second parts))
@@ -23,28 +22,31 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn tree-sum' [acc depleting-xs]
-  (if (empty? depleting-xs)
-    acc
-    (recur (+ 1 acc) (rest depleting-xs))))
-
-(defn tree-sum
-  ([xs] tree-sum (first xs) (rest xs))
-  ([x xs]
-    (if (= 0 x)
-      1
-      (map (tree-sum' 0 xs) (take x xs)))))
+; How many copies does a card x win recursively excluding the card itself.
+(def card-copiesn (memoize
+  (fn [[x & xs]]
+    (case x
+      nil 0
+      0 0
+      (let [n (count (take x xs))
+            m (apply + (map #(card-copiesn (drop % xs)) (range n)))
+            acc (+ n m)]
+        acc)))))
 
 (defn p2' [s]
-  (->> s
-      str/split-lines
-      (map card-wins)
-      tree-sum
-      ))
+  (let [xs (map card-wins (str/split-lines s))
+        n (count xs)]
+    (->> xs
+        repeat
+        (take n)
+        (map-indexed #(drop %1 %2))
+        (map card-copiesn)
+        (apply +)
+        (+ n))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn run [f] (println (f (slurp "resources/h4.dat"))))
+(defn run [f] (pprint (f (slurp "resources/h4.dat"))))
 
 (defn p1 [& _] (run p1'))
-(defn p2 [& _] (println "unfinished") (run p2'))
+(defn p2 [& _] (run p2'))
