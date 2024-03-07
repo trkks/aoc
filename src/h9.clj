@@ -9,16 +9,22 @@
       str/split-lines
       (map #(map parse-long (str/split % #"\s")))))
 
-(defn dive' [prev-last xs]
-  (if (every? #(= 0 %) xs)
-    prev-last
-    (+
-      prev-last
-      (dive'
-        (last xs)
-        (map #(apply - (reverse %)) (map vector xs (drop 1 xs)))))))
+(defn paired-diffs [xs]
+  (map
+    #(apply - (reverse %))
+    (map vector xs (drop 1 xs))))
 
-(defn dive [xs] (dive' 0 xs))
+(defn dive' [acc xs]
+  (if (every? #(= 0 %) xs)
+    (conj acc xs)
+    (dive' (conj acc xs) (paired-diffs xs))))
+
+(defn dive [xs] (dive' () xs))
+
+(defn predict [f g acc [x & xs]]
+  (if (empty? xs)
+    (f (g x) acc)
+    (recur f g (f (g x) acc) xs)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -29,9 +35,15 @@
   (->> s
        parse
        (map dive)
+       (map (partial predict + last 0))
        (apply +)))
 
-(defn p2' [s] (parse s))
+(defn p2' [s]
+  (->> s
+       parse
+       (map dive)
+       (map (partial predict - first 0))
+       (apply +)))
 
 (defn p1 [& _] (run p1'))
-(defn p2 [& _] (println "unimplemented") (run p2'))
+(defn p2 [& _] (run p2'))
