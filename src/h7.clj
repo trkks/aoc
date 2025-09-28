@@ -4,6 +4,8 @@
 (require '[clojure.string :as str])
 (require '[clojure.math :as math])
 
+(require '[utils])
+
 
 (def basic-card-values [ nil \2 \3 \4 \5 \6 \7 \8 \9 \T \J \Q \K \A ])
 (def jokered-card-values [ nil \J \2 \3 \4 \5 \6 \7 \8 \9 \T \Q \K \A ])
@@ -106,13 +108,10 @@
       (map-indexed #(* (inc %1) %2))
       (apply +)))
 
-(defn p1' [s] (solve basic-card-values s))
+(defn p1 [s] (solve basic-card-values s))
 
-(defn p2' [s] (solve jokered-card-values s))
+(defn p2 [s] (solve jokered-card-values s))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn run [f] (println (f (slurp "resources/h7.dat"))))
-
-(defn p1 [& _] (run p1'))
-(defn p2 [& _] (run p2'))
+(defn -main [& [part _]] (utils/main-builder 7 {:part1 p1 :part2 p2} part))

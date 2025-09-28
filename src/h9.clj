@@ -4,6 +4,9 @@
 (require '[clojure.string :as str])
 (require '[clojure.math :as math])
 
+(require '[utils])
+
+
 (defn parse [s]
   (->> s
       str/split-lines
@@ -28,22 +31,18 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn run [f] (println (f (slurp "resources/h9.dat"))))
-;(defn run [f] (println (f (slurp "resources/h9.dat.sample"))))
-
-(defn p1' [s]
+(defn p1 [s]
   (->> s
        parse
        (map dive)
        (map (partial predict + last 0))
        (apply +)))
 
-(defn p2' [s]
+(defn p2 [s]
   (->> s
        parse
        (map dive)
        (map (partial predict - first 0))
        (apply +)))
 
-(defn p1 [& _] (run p1'))
-(defn p2 [& _] (run p2'))
+(defn -main [& [part _]] (utils/main-builder 9 {:part1 p1 :part2 p2} part))

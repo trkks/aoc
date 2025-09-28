@@ -5,6 +5,8 @@
 (require '[clojure.set :as set])
 (require '[clojure.math :as math])
 
+(require '[utils])
+
 (defn card-wins [s]
   (let [
     parts   (rest (str/split s #"\||:" 3))
@@ -13,7 +15,7 @@
     yours   (nums (second parts))
   ] (count (set/intersection winners yours))))
 
-(defn p1' [s]
+(defn p1 [s]
   (->> s
       str/split-lines
       (map card-wins)
@@ -33,7 +35,7 @@
             acc (+ n m)]
         acc)))))
 
-(defn p2' [s]
+(defn p2 [s]
   (let [xs (map card-wins (str/split-lines s))
         n (count xs)]
     (->> xs
@@ -46,7 +48,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn run [f] (pprint (f (slurp "resources/h4.dat"))))
-
-(defn p1 [& _] (run p1'))
-(defn p2 [& _] (run p2'))
+(defn -main [& [part _]] (utils/main-builder 4 {:part1 p1 :part2 p2} part))

@@ -4,14 +4,14 @@
 (require '[clojure.repl :refer :all])
 (require '[clojure.string :as str])
 
-(require '[h1 :refer [java-int]])
+(require '[utils])
 
 
 (defn max-cubes'
   ([c nc-pairs]
     (apply max
       (map
-        #(java-int (first %))
+        #(utils/java-int (first %))
         (filter #(= c (second %)) nc-pairs)))))
 
 (defn max-cubes
@@ -26,7 +26,7 @@
 (defn game-sets [s]
   (let [[id & xs] (re-seq #"[0-9]+|red|blue|green" s)]
     (hash-map
-       :id (java-int id),
+       :id (utils/java-int id),
        :max-red (max-cubes :red xs),
        :max-blue (max-cubes :blue xs),
        :max-green (max-cubes :green xs))))
@@ -56,7 +56,9 @@
       :id
       (possible-games (map game-sets (str/split-lines s))))))
 
-(defn run [f] (println (f (slurp "./resources/h2.dat"))))
+(defn run [f input] (f input))
 
-(defn p1 [& _] (run p1'))
-(defn p2 [& _] (run p2'))
+(def p1 (partial run p1'))
+(def p2 (partial run p2'))
+
+(defn -main [& [part _]] (utils/main-builder 2 {:part1 p1 :part2 p2} part))

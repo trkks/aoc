@@ -4,6 +4,8 @@
 (require '[clojure.string :as str])
 (require '[clojure.math :as math])
 
+(require '[utils])
+
 (def start-element "AAA")
 (def end-element "ZZZ")
 
@@ -41,18 +43,15 @@
 (defn count-steps [nodes lrs start]
   (step nodes (flatten (repeat lrs)) start))
     
-(defn p1' [s] (
+(defn p1 [s] (
   ->> s
     str/split-lines
     (filter #(not (empty? %)))
     parse
     (apply count-steps)))
 
-(defn p2' [s] (println "unimplemented"))
+(defn p2 [s] (println "unimplemented"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn run [f] (println (f (slurp "resources/h8.dat"))))
-
-(defn p1 [& _] (run p1'))
-(defn p2 [& _] (run p2'))
+(defn -main [& [part _]] (utils/main-builder 8 {:part1 p1 :part2 p2} part))

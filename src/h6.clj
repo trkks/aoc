@@ -4,6 +4,8 @@
 (require '[clojure.string :as str])
 (require '[clojure.math :as math])
 
+(require '[utils])
+
 
 (defn distance [n ms] (bigint (math/floor (* ms (- n ms)))))
 
@@ -26,15 +28,12 @@
     #(count (winners (first %) (second %)))
     (map vector (map distances ts) ds)))
 
-(defn p1' [s]
+(defn p1 [s]
   (let [m (races (str/split-lines s))]
     (apply * (winways (:time m) (:distance m)))))
         
-(defn p2' [s] (apply winways (race (str/split-lines s))))
+(defn p2 [s] (vector (apply winways (race (str/split-lines s)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn run [f] (println (f (slurp "resources/h6.dat"))))
-
-(defn p1 [& _] (run p1'))
-(defn p2 [& _] (run p2'))
+(defn -main [& [part _]] (utils/main-builder 6 {:part1 p1 :part2 p2} part))

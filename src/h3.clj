@@ -4,6 +4,8 @@
 (require '[clojure.repl :refer :all])
 (require '[clojure.string :as str])
 
+(require '[utils])
+
 
 (defn row-nums [s]
   (re-seq #"\d+" s))
@@ -128,10 +130,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(defn p1' ([s] (schema-sum s)))
-(defn p2' ([s] (gear-ratio-sum s)))
+(defn p1 ([s] (schema-sum s)))
+(defn p2 ([s] (gear-ratio-sum s)))
 
-(defn run [f] (println (f (slurp "resources/h3.dat"))))
-
-(defn p1 [& _] (run p1'))
-(defn p2 [& _] (run p2'))
+(defn -main [& [part _]] (utils/main-builder 3 {:part1 p1 :part2 p2} part))

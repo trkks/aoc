@@ -5,6 +5,8 @@
 (require '[clojure.set :as set])
 (require '[clojure.math :as math])
 
+(require '[utils])
+
 
 (defn seeds [x]
   (let [i (str/index-of x ":")]
@@ -92,7 +94,7 @@
 (defn almanac-solution [rtf {seeds :seeds, maps :maps}]
   (get-to-bottom maps (rtf seeds)))
 
-(defn run'
+(defn run
   ([rtf s]
     (->> s
         str/split-lines
@@ -114,9 +116,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn run 
-  ([f] (println (run' f (slurp "resources/h5.dat"))))
-  ([] (run identity)))
+(def p1 (partial run identity))
+(defn p2 [input] (println "unfinished") (run flat-range input))
 
-(defn p1 [& _] (run))
-(defn p2 [& _] (println "unfinished") (run flat-range))
+(defn -main [& [part _]] (utils/main-builder 5 {:part1 p1 :part2 p2} part))

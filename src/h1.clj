@@ -5,6 +5,9 @@
 
 (require '[clojure.string :as str])
 
+(require '[utils])
+
+
 ;(doc nil?)
 ;(str/upper-case "foobar")
 
@@ -50,16 +53,14 @@
 (defn pair-p1 [xs]
   (apply str (str/join [(first-digit xs) (first-digit (reverse xs))])))
 
-(def input (slurp "resources/h1.dat"))
+(defn run [f input]
+  (apply +
+    (map
+      #(if (str/blank? %) 0 (utils/java-int %))
+      (map f (str/split-lines input)))))
 
-(defn java-int [x] (Integer. x))
+(def p1 (partial run pair-p1))
+(def p2 (partial run pair))
 
-(defn run [f]
-  (println
-    (apply +
-      (map
-        #(if (str/blank? %) 0 (java-int %))
-        (map f (str/split-lines input))))))
-
-(defn p1 [& _] (run pair-p1))
-(defn p2 [& _] (run pair))
+; MAIN.
+(defn -main [& [part _]] (utils/main-builder 1 {:part1 p1 :part2 p2} part))
